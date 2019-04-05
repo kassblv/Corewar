@@ -1,0 +1,105 @@
+$EXTERN
+{
+    'corewar.lex.h',
+};
+
+
+$PRODUCTION
+{
+    <program>       ->  <newline_opt> <prolog> <list_opt>
+                    ;
+
+    <newline_opt>   ->  <newline_list>
+                    |   $EMPTY
+                    ;
+
+    <prolog>        ->  <name> <comment>
+                    |   <comment> <name>
+                    ;
+
+    <name>          ->  NAME    STR NEWLINE ;
+    <comment>       ->  COMMENT STR NEWLINE ;
+
+    <list_opt>      ->  <list>
+                    |   $EMPTY
+                    ;
+
+    <list>          ->  <asm_layout> <list'>
+                    ;
+
+    <list'>         ->  <asm_layout> <list'>
+                    |   $EMPTY
+                    ;
+
+    <asm_layout>    ->  <label_opt> <mixed_instr> <newline_list>
+                    ;
+
+    <label_opt>     ->  LABEL
+                    |   $EMPTY
+                    ;
+
+    <mixed_instr>   ->  <lfork_instr>
+                    |   <sti_instr>
+                    |   <fork_instr>
+                    |   <lld_instr>
+                    |   <ld_instr>
+                    |   <add_instr>
+                    |   <zjmp_instr>
+                    |   <sub_instr>
+                    |   <ldi_instr>
+                    |   <or_instr>
+                    |   <st_instr>
+                    |   <aff_instr>
+                    |   <live_instr>
+                    |   <xor_instr>
+                    |   <lldi_instr>
+                    |   <and_instr>
+                    |   $EMPTY
+                    ;
+
+    <lfork_instr>   ->  LFORK   DIRECT                              ;
+    <zjmp_instr>    ->  ZJMP    DIRECT                              ;
+    <aff_instr>     ->  AFF     REG                                 ;
+    <fork_instr>    ->  FORK    DIRECT                              ;
+    <live_instr>    ->  LIVE    DIRECT                              ;
+    <st_instr>      ->  ST      REG      ',' <regind>               ;
+    <lld_instr>     ->  LLD     <dirind> ',' REG                    ;
+    <ld_instr>      ->  LD      <dirind> ',' REG                    ;
+    <add_instr>     ->  ADD     REG      ',' REG      ',' REG       ;
+    <sub_instr>     ->  SUB     REG      ',' REG      ',' REG       ;
+    <sti_instr>     ->  STI     REG      ',' <all>    ',' <regdir>  ;
+    <ldi_instr>     ->  LDI     <all>    ',' <regdir> ',' REG       ;
+    <lldi_instr>    ->  LLDI    <all>    ',' <regdir> ',' REG       ; 
+    <or_instr>      ->  OR      <all>    ',' <all>    ',' REG       ;
+    <xor_instr>     ->  XOR     <all>    ',' <all>    ',' REG       ;
+    <and_instr>     ->  AND     <all>    ',' <all>    ',' REG       ;
+
+    <all>           ->  REG
+                    |   DIRECT
+                    |   INDIRECT
+                    ;
+
+    <regdir>        ->  REG
+                    |   DIRECT
+                    ;
+
+    <regind>        ->  REG
+                    |   INDIRECT
+                    ;
+
+    <dirind>        ->  DIRECT
+                    |   INDIRECT
+                    ;
+
+    <newline_list>  ->  NEWLINE <newline_list'>
+                    ;
+
+    <newline_list'> ->  NEWLINE <newline_list'>
+                    |   $EMPTY
+                    ;
+};
+
+$ALIAS
+{
+    (SEP    => ','),
+};
